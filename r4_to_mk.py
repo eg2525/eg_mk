@@ -1,6 +1,7 @@
 import streamlit as st
 import pandas as pd
 import numpy as np
+from io import BytesIO
 
 def process_data(df):
     columns_mk = [
@@ -105,9 +106,9 @@ def process_data(df):
 
     return df_mk
 
-st.title('Excel Data Processing App')
+st.title('給与R4→Mykomon')
 
-uploaded_file = st.file_uploader("Choose an Excel file", type="xlsx")
+uploaded_file = st.file_uploader("Excelをアップロードしてください。", type="xlsx")
 
 if uploaded_file is not None:
     df = pd.read_excel(uploaded_file, header=1)
@@ -115,10 +116,16 @@ if uploaded_file is not None:
     
     st.dataframe(df_processed)
     
-    csv = df_processed.to_csv(index=False, encoding='cp932')
+    # Excelへの出力
+    output = BytesIO()
+    with pd.ExcelWriter(output, engine='openpyxl') as writer:
+        df_processed.to_excel(writer, index=False, sheet_name='Sheet1')
+    
+    processed_data = output.getvalue()
+
     st.download_button(
-        label="Download Processed Data as CSV",
-        data=csv,
-        file_name='processed_data.csv',
-        mime='text/csv',
+        label="Download Processed Data as Excel",
+        data=processed_data,
+        file_name='processed_data.xlsx',
+        mime='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
     )

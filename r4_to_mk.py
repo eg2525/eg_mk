@@ -108,6 +108,14 @@ def process_data(df):
 
 st.title('給与R4→Mykomon')
 
+st.markdown("""
+    #### 給与R4からの出力手順
+    1.02.「設定」→24.「従業員/一覧入力」を選択
+    2.Excel(F12)を選択→「はい」をクリック
+    3.ファイルの種類を(*.xlsx)に変更して保存
+    4.下部の指定場所にアップロード
+    """)
+
 uploaded_file = st.file_uploader("Excelをアップロードしてください。", type="xlsx")
 
 if uploaded_file is not None:
